@@ -44,10 +44,18 @@ var TextMapper = function(xpath) {
 	return exports;
 };
 
+function smallCapCoC() {
+	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
+	var ccNodes =
+		document.evaluate(ccPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+	var ccn = ccNodes.singleNodeValue;
+
+	var newText = '<span style="font-varant: small-caps; font-variant-caps: all-small-caps;">cthulhu cult</span>';
+	if (ccn) {
+		ccn.innerHTML = ccn.innerHTML.replace(/CTHULHU CULT/g, newText);
+	}
+}
+
 var mapper = TextMapper('/html/body/center/table/tbody//text()');
 mapper.apply(Beautifier.apply);
-
-// Doesn't work because it doesn't get parsed as HTML. :-(
-// mapper.apply(function(text) {
-//   return text.replace(/CTHULHU CULT/g, '<span style="font-varant: small-caps;">cthulhu cult</span>');
-// })
+smallCapCoC();
