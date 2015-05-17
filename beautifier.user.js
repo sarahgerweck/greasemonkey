@@ -7,7 +7,6 @@
 // @require     http://osteele.com/sources/javascript/functional/functional.min.js
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
-
 var Beautifier = (function() {
 	var exports = {};
 	var regexes = [
@@ -23,21 +22,44 @@ var Beautifier = (function() {
 	exports.apply = function(s) {
 		return fjs.fold(replacer, s, regexes);
 	};
+	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
+	exports.smallCapSpan = function(body) {
+		return '<span style="' + smallCapStyle + '">' + body + '</span>';
+	};
+
+	var ampmRegexes = [
+		[/\bA\.M\./g, exports.smallCapSpan('am')],
+		[/\bP\.M\./g, exports.smallCapSpan('pm')]
+	];
+
+	exports.ampm = function(s) {
+		return fjs.fold(replacer, s, ampmRegexes);
+	};
+
 	return exports;
 })();
 
 var TextMapper = function(xpath) {
 	var exports = {};
 
-	var currentTextNodes = function() {
+	var currentNodes = function() {
 		return document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 	};
 
-	exports.apply = function(callback) {
-		var textNodes = currentTextNodes();
+	exports.data = function(callback) {
+		var textNodes = currentNodes();
 		for (var i = 0; i < textNodes.snapshotLength; i++) {
 			var node = textNodes.snapshotItem(i);
 			node.data = callback(node.data)
+		}
+	};
+
+	exports.html = function(mapper) {
+		var nodes = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+		var node = nodes.iterateNext();
+		while (node) {
+			node.innerHTML = mapper(node.innerHTML)
+			node = nodes.iterateNext();
 		}
 	};
 
@@ -50,8 +72,7 @@ function smallCapCoC() {
 		document.evaluate(ccPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
 	var ccn = ccNodes.singleNodeValue;
 
-	var styles = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
-	var newHtml = '<span style="' + styles + '">cthulhu cult</span>';
+	var newHtml = Beautifier.smallCapSpan('cthulhu cult');
 	if (ccn) {
 		ccn.innerHTML = ccn.innerHTML.replace(/CTHULHU CULT/g, newHtml);
 	}
@@ -59,7 +80,10 @@ function smallCapCoC() {
 
 // Apply basic beautification to the page.
 var mapper = TextMapper('/html/body/center/table/tbody//text()');
-mapper.apply(Beautifier.apply);
+mapper.data(Beautifier.apply);
 
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
+
+var fullTextMapper = TextMapper('/html/body/center/table/tbody');
+fullTextMapper.html(Beautifier.ampm);
