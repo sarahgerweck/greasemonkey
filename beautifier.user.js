@@ -4,14 +4,15 @@
 // @include     http://www.dagonbytes.com/thelibrary/lovecraft/*.htm
 // @version     1
 // @grant       none
-// @require     http://osteele.com/sources/javascript/functional/functional.min.js
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
 var Beautifier = (function() {
 	var exports = {};
 
 	/** Basic replacement function */
-	var replacer = 'x.replace(y[0], y[1])'.lambda();
+	var replacer = function(x, y) {
+		return x.replace(y[0], y[1]);
+	};
 
 	/** Helpers for generating small caps */
 	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
