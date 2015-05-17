@@ -6,6 +6,7 @@
 // @grant       none
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
+
 var Beautifier = (function() {
 	var exports = {};
 
