@@ -64,6 +64,13 @@ var TextMapper = function(xpath) {
 		forAllNodes(dataMapper);
 	};
 
+	exports.dataRE = function(re, repl) {
+		var mapper = function(s) {
+			return s.replace(re, repl);
+		};
+		exports.data(mapper);
+	}
+
 	/** Remap the innerHTML of all matching nodes. */
 	exports.html = function(mapper) {
 		var htmlMapper = function(n) { n.innerHTML = mapper(n.innerHTML) };
@@ -95,3 +102,4 @@ fullTextMapper.html(Beautifier.ampm);
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
+mapper.dataRE(/the way clown toward/g, 'the way down toward');
