@@ -9,6 +9,17 @@
 // ==/UserScript==
 var Beautifier = (function() {
 	var exports = {};
+
+	/** Basic replacement function */
+	var replacer = 'x.replace(y[0], y[1])'.lambda();
+
+	/** Helpers for generating small caps */
+	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
+	exports.smallCapSpan = function(body) {
+		return '<span style="' + smallCapStyle + '">' + body + '</span>';
+	};
+
+	/** Standard typographic formatting */
 	var regexes = [
 		[/([^\s'])'([^']|$)/g,   '$1’$2'],
 		[/(^|\s)'(\S)/g,         '$1‘$2'],
@@ -18,20 +29,15 @@ var Beautifier = (function() {
 		[/\s+-\s+|--| -- /g,     '—'],
 		[/\Q...\E/g,             '…']
 	];
-	var replacer = 'x.replace(y[0], y[1])'.lambda();
 	exports.apply = function(s) {
 		return fjs.fold(replacer, s, regexes);
 	};
-	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
-	exports.smallCapSpan = function(body) {
-		return '<span style="' + smallCapStyle + '">' + body + '</span>';
-	};
 
+	/** Small-cap typesetting of am & pm */
 	var ampmRegexes = [
 		[/\bA\.M\./g, exports.smallCapSpan('am')],
 		[/\bP\.M\./g, exports.smallCapSpan('pm')]
 	];
-
 	exports.ampm = function(s) {
 		return fjs.fold(replacer, s, ampmRegexes);
 	};
@@ -46,6 +52,7 @@ var TextMapper = function(xpath) {
 		return document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 	};
 
+	/** Remap just the text of all the matching nodes. */
 	exports.data = function(callback) {
 		var textNodes = currentNodes();
 		for (var i = 0; i < textNodes.snapshotLength; i++) {
@@ -54,6 +61,7 @@ var TextMapper = function(xpath) {
 		}
 	};
 
+	/** Remap the innerHTML of all matching nodes. */
 	exports.html = function(mapper) {
 		var nodes = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
 		var node = nodes.iterateNext();
