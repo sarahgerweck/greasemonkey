@@ -8,37 +8,37 @@
 // ==/UserScript==
 
 var Beautifier = (function() {
-  var exports = {};
-  var regexes = [
-    [/([^\s'])'([^']|$)/g, '$1’$2'],
-    [/(^|\s)'(\S)/g,       '$1‘$2'],
-    [/(^|\s)"([^\s"])/g,   '$1“$2'],
-    [/([^\s"])"(\s|$)/g,   '$1”$2'],
-    [/(\d)-(\d)/g,         '$1–$2'],
-    [/\s+-\s+|--| -- /g,   '—'],
-    [/\Q...\E/g,           '…'],
-  ];
+	var exports = {};
+	var regexes = [
+		[/([^\s'])'([^']|$)/g, '$1’$2'],
+		[/(^|\s)'(\S)/g,       '$1‘$2'],
+		[/(^|\s)"([^\s"])/g,   '$1“$2'],
+		[/([^\s"])"(\s|$)/g,   '$1”$2'],
+		[/(\d)-(\d)/g,         '$1–$2'],
+		[/\s+-\s+|--| -- /g,   '—'],
+		[/\Q...\E/g,           '…'],
+	];
 	var replacer = 'x.replace(y[0], y[1])'.lambda();
 	exports.apply = 'reduce(replacer, _, regexes)'.lambda();
-  return exports;
+	return exports;
 })();
 
 var TextMapper = function(xpath) {
-  var exports = {};
+	var exports = {};
 
-  var currentTextNodes = function() {
-    return document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-  };
+	var currentTextNodes = function() {
+		return document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+	};
 
-  exports.apply = function(callback) {
-    var textNodes = currentTextNodes();
-    for (var i = 0; i < textNodes.snapshotLength; i++) {
-      var node = textNodes.snapshotItem(i);
-      node.data = callback(node.data)
-    }
-  };
+	exports.apply = function(callback) {
+		var textNodes = currentTextNodes();
+		for (var i = 0; i < textNodes.snapshotLength; i++) {
+			var node = textNodes.snapshotItem(i);
+			node.data = callback(node.data)
+		}
+	};
 
-  return exports;
+	return exports;
 };
 
 var mapper = TextMapper('/html/body/center/table/tbody//text()');
