@@ -14,6 +14,9 @@ var Beautifier = (function() {
 	var replacer = function(x, y) {
 		return x.replace(y[0], y[1]);
 	};
+	var applyRegexes = fjs.curry(function(re, s) {
+		return fjs.fold(replacer, s, re);
+	});
 
 	/** Helpers for generating small caps */
 	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
@@ -31,18 +34,14 @@ var Beautifier = (function() {
 		[/\s+-\s+|--| -- /g,     '—'],
 		[/\Q...\E/g,             '…']
 	];
-	exports.apply = function(s) {
-		return fjs.fold(replacer, s, regexes);
-	};
+	exports.apply = applyRegexes(regexes);
 
 	/** Small-cap typesetting of am & pm */
 	var ampmRegexes = [
 		[/\bA\.M\./g, exports.smallCapSpan('am')],
 		[/\bP\.M\./g, exports.smallCapSpan('pm')]
 	];
-	exports.ampm = function(s) {
-		return fjs.fold(replacer, s, ampmRegexes);
-	};
+	exports.ampm = applyRegexes(ampmRegexes);
 
 	return exports;
 })();
