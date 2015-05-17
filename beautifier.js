@@ -19,11 +19,7 @@ var Beautifier = (function() {
     [/\Q...\E/g,           '…'],
   ];
   exports.apply = function(inputString) {
-    var workingValue = inputString;
-    for (var i = 0; i < regexes.length; i++) {
-      workingValue = workingValue.replace(regexes[i][0], regexes[i][1]);
-    }
-    return workingValue;
+    return reduce('x.replace(y[0], y[1])', inputString, regexes);
   };
   return exports;
 })();
