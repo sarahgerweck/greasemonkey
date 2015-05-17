@@ -5,6 +5,7 @@
 // @version     1
 // @grant       none
 // @require     http://osteele.com/sources/javascript/functional/functional.min.js
+// @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
 
 var Beautifier = (function() {
@@ -19,7 +20,9 @@ var Beautifier = (function() {
 		[/\Q...\E/g,           '…'],
 	];
 	var replacer = 'x.replace(y[0], y[1])'.lambda();
-	exports.apply = 'reduce(replacer, _, regexes)'.lambda();
+	exports.apply = function(s) {
+		return fjs.fold(replacer, s, regexes);
+	};
 	return exports;
 })();
 
