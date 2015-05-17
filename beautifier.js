@@ -18,9 +18,8 @@ var Beautifier = (function() {
     [/\s+-\s+|--| -- /g,   '—'],
     [/\Q...\E/g,           '…'],
   ];
-  exports.apply = function(inputString) {
-    return reduce('x.replace(y[0], y[1])', inputString, regexes);
-  };
+	var replacer = 'x.replace(y[0], y[1])'.lambda();
+	exports.apply = 'reduce(replacer, _, regexes)'.lambda();
   return exports;
 })();
 
