@@ -89,8 +89,9 @@ function smallCapCoC() {
 var mapper = TextMapper('/html/body/center/table/tbody//text()');
 mapper.data(Beautifier.apply);
 
+var fullTextMapper = TextMapper('/html/body/center/table/tbody');
+fullTextMapper.html(Beautifier.ampm);
+
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
-var fullTextMapper = TextMapper('/html/body/center/table/tbody');
-fullTextMapper.html(Beautifier.ampm);
