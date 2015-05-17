@@ -48,27 +48,25 @@ var Beautifier = (function() {
 var TextMapper = function(xpath) {
 	var exports = {};
 
-	var currentNodes = function() {
-		return document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+	var forAllNodes = function(mapper) {
+		var nodes =
+			document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+		for (var i = 0; i < nodes.snapshotLength; i++) {
+			var node = nodes.snapshotItem(i);
+			mapper(node);
+		}
 	};
 
 	/** Remap just the text of all the matching nodes. */
-	exports.data = function(callback) {
-		var textNodes = currentNodes();
-		for (var i = 0; i < textNodes.snapshotLength; i++) {
-			var node = textNodes.snapshotItem(i);
-			node.data = callback(node.data)
-		}
+	exports.data = function(mapper) {
+		var dataMapper = function(n) { n.data = mapper(n.data) };
+		forAllNodes(dataMapper);
 	};
 
 	/** Remap the innerHTML of all matching nodes. */
 	exports.html = function(mapper) {
-		var nodes = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
-		var node = nodes.iterateNext();
-		while (node) {
-			node.innerHTML = mapper(node.innerHTML)
-			node = nodes.iterateNext();
-		}
+		var htmlMapper = function(n) { n.innerHTML = mapper(n.innerHTML) };
+		forAllNodes(htmlMapper);
 	};
 
 	return exports;
