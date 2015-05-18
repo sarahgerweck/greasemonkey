@@ -79,6 +79,28 @@ var TextMapper = function(xpath) {
 		}
 	};
 
+	var Mapper = function(nodeLister, mapperBuilder) {
+		var exports = {};
+
+		var builder = function(mapper) {
+			nodeLister(mapperBuilder(mapper));
+		};
+
+		exports.generic = builder;
+
+		exports.RE = function(re, repl) {
+			var mapper = function(s) { return s.replace(re, repl) };
+			builder(mapper);
+		}
+
+		exports.multiRE = function(regexes) {
+			var mapper = RegexUtil.multiRegex(regexes);
+			builder(mapper);
+		};
+
+		return exports;
+	};
+
 	var dataMapperBuilder = fjs.curry(function(mapper, n) {
 		n.data = mapper(n.data);
 	});
@@ -87,55 +109,14 @@ var TextMapper = function(xpath) {
 		n.innerHTML = mapper(n.innerHTML);
 	});
 
-	var builder = function(nodeLister, mapperBuilder) {
-		var fullFn = function(mapper) {
-			nodeLister(mapperBuilder(mapper));
-		}
-		return fullFn;
+	exports.Data = {
+		All: Mapper(forAllNodes, dataMapperBuilder),
+		Unique: Mapper(forUniqueNode, dataMapperBuilder)
 	};
 
-	var mapAllBuilder = function (b) {
-		return builder(forAllNodes, b);
-	}
-
-	var mapUniqueBuilder = function(b) {
-		return builder(forUniqueNode, b);
-	}
-
-	/** Remap just the text of all the matching nodes. */
-	exports.data = mapAllBuilder(dataMapperBuilder);
-
-	exports.dataRE = function(re, repl) {
-		var mapper = function(s) {
-			return s.replace(re, repl);
-		};
-		exports.data(mapper);
-	};
-
-	exports.dataMultiRE = function(regexes) {
-		var mapper = RegexUtil.multiRegex(regexes);
-		exports.data(mapper);
-	};
-
-	/** Remap the innerHTML of all matching nodes. */
-	exports.html = mapAllBuilder(htmlMapperBuilder);
-
-	/* TODO: There are lots of versions of very similar code here.
-	 * I should probably be building an object for each of the four
-	 * basic map types: data, uniqueData, html, uniqueHtml. Each of
-	 * these four objects would inherit the same basic interface:
-	 * genericMapper, singleRE, multiRE.
-	 */
-	exports.uniqueHtml = mapUniqueBuilder(htmlMapperBuilder);
-	exports.uniqueHtmlRE = function(re, repl) {
-		var mapper = function(s) {
-			return s.replace(re, repl);
-		};
-		exports.uniqueHtml(mapper);
-	};
-	exports.uniqueHtmlMultiRE = function(regexes) {
-		var mapper = RegexUtil.multiRegex(regexes);
-		exports.uniqueHtml(mapper);
+	exports.Html = {
+		All: Mapper(forAllNodes, htmlMapperBuilder),
+		Unique: Mapper(forUniqueNode, htmlMapperBuilder)
 	};
 
 	return exports;
@@ -144,20 +125,20 @@ var TextMapper = function(xpath) {
 function smallCapCoC() {
 	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
 	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
-	TextMapper(ccPath).uniqueHtmlRE(/CTHULHU CULT/g, newHtml);
+	TextMapper(ccPath).Html.Unique.RE(/CTHULHU CULT/g, newHtml);
 }
 
 // Apply basic beautification to the page.
 var mapper = TextMapper('/html/body/center/table/tbody//text()');
-mapper.data(Beautifier.apply);
+mapper.Data.All.generic(Beautifier.apply);
 
 var fullTextMapper = TextMapper('/html/body/center/table/tbody');
-fullTextMapper.html(Beautifier.ampm);
+fullTextMapper.Html.All.generic(Beautifier.ampm);
 
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
-mapper.dataMultiRE([
+mapper.Data.All.MultiRE([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
 	[/Persuad-g/g, 'Persuading']
