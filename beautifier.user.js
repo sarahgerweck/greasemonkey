@@ -114,22 +114,23 @@ var TextMapper = function(xpath) {
 	return exports;
 };
 
+// Apply basic beautification to the page.
+var mapper = TextMapper('/html/body/center/table/tbody//text()');
+mapper.Data.All.generic(Beautifier.apply);
+
+// Apply small-caps AM & PM typesetting.
+var fullTextMapper = TextMapper('/html/body/center/table/tbody');
+fullTextMapper.Html.All.generic(Beautifier.ampm);
+
+// Beautify a particular bit in Call of Cthulhu with small caps.
 function smallCapCoC() {
 	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
 	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
 	TextMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
 }
-
-// Apply basic beautification to the page.
-var mapper = TextMapper('/html/body/center/table/tbody//text()');
-mapper.Data.All.generic(Beautifier.apply);
-
-var fullTextMapper = TextMapper('/html/body/center/table/tbody');
-fullTextMapper.Html.All.generic(Beautifier.ampm);
-
-// Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
+// Miscellaneous misspellings and errors.
 mapper.Data.All.multiRegex([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
