@@ -1,0 +1,72 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+@-moz-document url-prefix("http://www.dagonbytes.com/thelibrary/lovecraft/") {
+body {
+  background: hsl(240, 20%, 0%) !important;
+  color: hsl(60, 10%, 70%) !important;
+  text-rendering: optimizelegibility;
+}
+html > body > center > div > table, html > body > center > div > div:last-of-type {
+  display: none;
+}
+html > body > center > h2:first-of-type, html > body > center > h3, html > body > center > h3 + p, html > body > center > h3 + p + p {
+  display: none;
+}
+h2 {
+  border-bottom: 3px double #aaa; 
+  padding-bottom: 10px;
+  width: 560px !important;
+}
+h2, h2 font {
+  font-family: "Myriad Pro";
+  font-size: 36pt;
+  font-weight: 600;
+}
+h4, h4 font {
+  font-family: "Minion Pro Medium";
+  font-size: 33pt;
+  letter-spacing: .5pt;
+}
+p, p font {
+  font-family: "Minion Pro";
+  line-height: 140%;
+  font-size: 28pt;
+  font-weight: lighter;
+  font-stretch: semi-expanded;
+  font-synthesis: weight;
+  letter-spacing: normal;
+}
+p {
+  width: 23em;
+  margin: 0 auto;
+  margin-bottom: 32px;
+  text-align: left;
+}
+html > body > center > table > tbody > tr > td > blockquote:first-of-type p, html > body > center > table > tbody > tr > td > blockquote:first-of-type p font {
+  text-align: justify;
+  line-height: 110%;
+  font-family: "Minion Pro" !important;
+  font-stretch: condensed;
+  font-weight: light;
+}
+html > body > center > table > tbody > tr > td > blockquote:first-of-type > p:last-of-type, html > body > center > table > tbody > tr > td > blockquote:first-of-type > p:last-of-type font {
+  text-align: right !important;
+  font-stretch: normal;
+}
+html > body > center > table > tbody > tr > td > blockquote:nth-of-type(n+2) > p, html > body > center > table > tbody > tr > td > blockquote:nth-of-type(n+2) > p font {
+  align-content: center;
+  text-align: justify !important;
+  font-family: "Times New Roman" !important;
+  font-size: 22pt !important;
+  font-stretch: condensed;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 115%;
+  width: 22em;
+}
+/* html > body > center > table > tbody > tr > td > blockquote > p:first-of-type font {
+  text-align: center !important;
+  font-weight: bolder;
+  font-stretch: expanded;
+  letter-spacing: .5pt;
+} */
+}
