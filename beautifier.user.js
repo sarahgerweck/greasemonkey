@@ -130,11 +130,11 @@ var fullTextMapper = ContentMapper('/html/body/center/table/tbody');
 fullTextMapper.Html.All.generic(Beautifier.ampm);
 
 // Beautify a particular bit in Call of Cthulhu with small caps.
-function smallCapCoC() {
+var smallCapCoC = function() {
 	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
 	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
 	ContentMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
-}
+};
 smallCapCoC();
 
 // Miscellaneous misspellings and errors.
