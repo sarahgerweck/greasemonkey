@@ -6,6 +6,11 @@
 // @grant       none
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
+// ==ClosureCompiler==
+// @output_file_name default.js
+// @compilation_level ADVANCED_OPTIMIZATIONS
+// @code_url https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
+// ==/ClosureCompiler==
 
 var RegexUtil = (function() {
 	var exports = {};
