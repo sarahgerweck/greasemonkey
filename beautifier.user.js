@@ -88,14 +88,13 @@ var TextMapper = function(xpath) {
 
 		exports.generic = builder;
 
-		exports.RE = function(re, repl) {
+		exports.regex = function(re, repl) {
 			var mapper = function(s) { return s.replace(re, repl) };
 			builder(mapper);
 		}
 
-		exports.multiRE = function(regexes) {
-			var mapper = RegexUtil.multiRegex(regexes);
-			builder(mapper);
+		exports.multiRegex = function(regexes) {
+			builder(RegexUtil.multiRegex(regexes));
 		};
 
 		return exports;
@@ -104,18 +103,13 @@ var TextMapper = function(xpath) {
 	var MetaMapper = function(uncurried) {
 		var builder = fjs.curry(uncurried);
 		return {
-			All: Mapper(forAllNodes, builder),
+			All:    Mapper(forAllNodes, builder),
 			Unique: Mapper(forUniqueNode, builder)
 		};
 	};
 
-	exports.Data = MetaMapper(function(mapper, n) {
-		n.data = mapper(n.data);
-	});
-
-	exports.Html = MetaMapper(function(mapper, n) {
-		n.innerHTML = mapper(n.innerHTML);
-	});
+	exports.Data = MetaMapper('mapper, n => n.data      = mapper(n.data)');
+	exports.Html = MetaMapper('mapper, n => n.innerHTML = mapper(n.innerHTML)');
 
 	return exports;
 };
@@ -123,7 +117,7 @@ var TextMapper = function(xpath) {
 function smallCapCoC() {
 	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
 	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
-	TextMapper(ccPath).Html.Unique.RE(/CTHULHU CULT/g, newHtml);
+	TextMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
 }
 
 // Apply basic beautification to the page.
@@ -136,7 +130,7 @@ fullTextMapper.Html.All.generic(Beautifier.ampm);
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
-mapper.Data.All.MultiRE([
+mapper.Data.All.multiRegex([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
 	[/Persuad-g/g, 'Persuading']
