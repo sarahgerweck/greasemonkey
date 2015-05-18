@@ -137,5 +137,6 @@ mapper.Text.All.multiRegex([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
 	[/Persuad-g/g, 'Persuading'],
-	[/l23°/g, '123°']
+	[/l23°/g, '123°'],
+	[/but johansen drove/g, 'but Johansen drove']
 ]);
