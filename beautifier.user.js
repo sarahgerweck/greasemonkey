@@ -104,3 +104,4 @@ fullTextMapper.html(Beautifier.ampm);
 smallCapCoC();
 
 mapper.dataRE(/the way clown toward/g, 'the way down toward');
+mapper.dataRE(/stung th disappointment/g, 'stung with disappointment');
