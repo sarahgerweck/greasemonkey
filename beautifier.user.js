@@ -37,6 +37,8 @@ var Beautifier = (function() {
 
 	/** Standard typographic formatting */
 	var regexes = [
+		[/(°\d+)'/g,             '$1′'],
+		[/(′\d+)"/g,             '$1″'],
 		[/^'s(\s)/g,             '’s$1'],
 		[/([^\s'])'([^']|$)/g,   '$1’$2'],
 		[/(^|\s)'(\S)/g,         '$1‘$2'],
