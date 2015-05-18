@@ -87,13 +87,20 @@ var TextMapper = function(xpath) {
 		n.innerHTML = mapper(n.innerHTML);
 	});
 
-	var mapAllBuilder = fjs.curry(function(builder, mapper) {
-		forAllNodes(builder(mapper));
-	});
+	var builder = function(nodeLister, mapperBuilder) {
+		var fullFn = function(mapper) {
+			nodeLister(mapperBuilder(mapper));
+		}
+		return fullFn;
+	};
 
-	var mapUniqueBuilder = fjs.curry(function(builder, mapper) {
-		forUniqueNode(builder(mapper));
-	});
+	var mapAllBuilder = function (b) {
+		return builder(forAllNodes, b);
+	}
+
+	var mapUniqueBuilder = function(b) {
+		return builder(forUniqueNode, b);
+	}
 
 	/** Remap just the text of all the matching nodes. */
 	exports.data = mapAllBuilder(dataMapperBuilder);
