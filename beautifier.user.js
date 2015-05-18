@@ -105,3 +105,4 @@ smallCapCoC();
 
 mapper.dataRE(/the way clown toward/g, 'the way down toward');
 mapper.dataRE(/stung th disappointment/g, 'stung with disappointment');
+mapper.dataRE(/Persuad-g/g, 'Persuading');
