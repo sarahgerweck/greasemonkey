@@ -50,8 +50,8 @@ var Beautifier = (function() {
 
 	/** Small-cap typesetting of am & pm */
 	var ampmRegexes = [
-		[/\bA\.M\./g, exports.smallCapSpan('am')],
-		[/\bP\.M\./g, exports.smallCapSpan('pm')]
+		[/\bA\.M\.(?!\w)/g, exports.smallCapSpan('am')],
+		[/\bP\.M\.(?!\w)/g, exports.smallCapSpan('pm')]
 	];
 	exports.ampm = applyRegexes(ampmRegexes);
 
