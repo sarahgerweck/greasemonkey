@@ -146,3 +146,9 @@ mapper.Text.All.multiRegex([
 	[/l23°/g, '123°'],
 	[/but johansen drove/g, 'but Johansen drove']
 ]);
+
+if (window.location.href.indexOf('thedoomthatcametosarnath') > -1) {
+	mapper.Text.All.multiRegex([
+		[/\blb\b/g, 'Ib']
+	])
+};
