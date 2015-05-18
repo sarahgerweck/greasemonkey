@@ -70,11 +70,33 @@ var TextMapper = function(xpath) {
 		}
 	};
 
-	/** Remap just the text of all the matching nodes. */
-	exports.data = function(mapper) {
-		var dataMapper = function(n) { n.data = mapper(n.data) };
-		forAllNodes(dataMapper);
+	var forUniqueNode = function(mapper) {
+		var ccNodes =
+			document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+		var ccn = ccNodes.singleNodeValue;
+		if (ccn) {
+			mapper(ccn);
+		}
 	};
+
+	var dataMapperBuilder = fjs.curry(function(mapper, n) {
+		n.data = mapper(n.data);
+	});
+
+	var htmlMapperBuilder = fjs.curry(function(mapper, n) {
+		n.innerHTML = mapper(n.innerHTML);
+	});
+
+	var mapAllBuilder = fjs.curry(function(builder, mapper) {
+		forAllNodes(builder(mapper));
+	});
+
+	var mapUniqueBuilder = fjs.curry(function(builder, mapper) {
+		forUniqueNode(builder(mapper));
+	});
+
+	/** Remap just the text of all the matching nodes. */
+	exports.data = mapAllBuilder(dataMapperBuilder);
 
 	exports.dataRE = function(re, repl) {
 		var mapper = function(s) {
@@ -83,15 +105,30 @@ var TextMapper = function(xpath) {
 		exports.data(mapper);
 	};
 
-	exports.multiRE = function(regexes) {
+	exports.dataMultiRE = function(regexes) {
 		var mapper = RegexUtil.multiRegex(regexes);
 		exports.data(mapper);
 	};
 
 	/** Remap the innerHTML of all matching nodes. */
-	exports.html = function(mapper) {
-		var htmlMapper = function(n) { n.innerHTML = mapper(n.innerHTML) };
-		forAllNodes(htmlMapper);
+	exports.html = mapAllBuilder(htmlMapperBuilder);
+
+	/* TODO: There are lots of versions of very similar code here.
+	 * I should probably be building an object for each of the four
+	 * basic map types: data, uniqueData, html, uniqueHtml. Each of
+	 * these four objects would inherit the same basic interface:
+	 * genericMapper, singleRE, multiRE.
+	 */
+	exports.uniqueHtml = mapUniqueBuilder(htmlMapperBuilder);
+	exports.uniqueHtmlRE = function(re, repl) {
+		var mapper = function(s) {
+			return s.replace(re, repl);
+		};
+		exports.uniqueHtml(mapper);
+	};
+	exports.uniqueHtmlMultiRE = function(regexes) {
+		var mapper = RegexUtil.multiRegex(regexes);
+		exports.uniqueHtml(mapper);
 	};
 
 	return exports;
@@ -99,14 +136,8 @@ var TextMapper = function(xpath) {
 
 function smallCapCoC() {
 	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
-	var ccNodes =
-		document.evaluate(ccPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-	var ccn = ccNodes.singleNodeValue;
-
-	var newHtml = Beautifier.smallCapSpan('cthulhu cult');
-	if (ccn) {
-		ccn.innerHTML = ccn.innerHTML.replace(/CTHULHU CULT/g, newHtml);
-	}
+	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
+	TextMapper(ccPath).uniqueHtmlRE(/CTHULHU CULT/g, newHtml);
 }
 
 // Apply basic beautification to the page.
@@ -119,7 +150,7 @@ fullTextMapper.html(Beautifier.ampm);
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
-mapper.multiRE([
+mapper.dataMultiRE([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
 	[/Persuad-g/g, 'Persuading']
