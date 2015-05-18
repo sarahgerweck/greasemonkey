@@ -26,6 +26,7 @@ var Beautifier = (function() {
 
 	/** Standard typographic formatting */
 	var regexes = [
+		[/^'s(\s)/g,             '’s$1'],
 		[/([^\s'])'([^']|$)/g,   '$1’$2'],
 		[/(^|\s)'(\S)/g,         '$1‘$2'],
 		[/(^|\s)"([^\s"])/g,     '$1“$2'],
