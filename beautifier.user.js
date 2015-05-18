@@ -101,23 +101,21 @@ var TextMapper = function(xpath) {
 		return exports;
 	};
 
-	var dataMapperBuilder = fjs.curry(function(mapper, n) {
+	var MetaMapper = function(uncurried) {
+		var builder = fjs.curry(uncurried);
+		return {
+			All: Mapper(forAllNodes, builder),
+			Unique: Mapper(forUniqueNode, builder)
+		};
+	};
+
+	exports.Data = MetaMapper(function(mapper, n) {
 		n.data = mapper(n.data);
 	});
 
-	var htmlMapperBuilder = fjs.curry(function(mapper, n) {
+	exports.Html = MetaMapper(function(mapper, n) {
 		n.innerHTML = mapper(n.innerHTML);
 	});
-
-	exports.Data = {
-		All: Mapper(forAllNodes, dataMapperBuilder),
-		Unique: Mapper(forUniqueNode, dataMapperBuilder)
-	};
-
-	exports.Html = {
-		All: Mapper(forAllNodes, htmlMapperBuilder),
-		Unique: Mapper(forUniqueNode, htmlMapperBuilder)
-	};
 
 	return exports;
 };
