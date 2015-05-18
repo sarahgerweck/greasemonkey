@@ -41,7 +41,7 @@ p {
   margin-bottom: 32px;
   text-align: left;
 }
-html > body > center > table > tbody > tr > td > blockquote:first-of-type p, html > body > center > table > tbody > tr > td > blockquote:first-of-type p font {
+html > body > center > table > tbody > tr > td > blockquote:first-of-type * {
   text-align: justify;
   line-height: 110%;
   font-family: "Minion Pro" !important;
@@ -52,7 +52,7 @@ html > body > center > table > tbody > tr > td > blockquote:first-of-type > p:la
   text-align: right !important;
   font-stretch: normal;
 }
-html > body > center > table > tbody > tr > td > blockquote:nth-of-type(n+2) > p, html > body > center > table > tbody > tr > td > blockquote:nth-of-type(n+2) > p font {
+html > body > center > table > tbody > tr > td > blockquote:nth-of-type(n+2) * {
   align-content: center;
   text-align: justify !important;
   font-family: "Times New Roman" !important;
