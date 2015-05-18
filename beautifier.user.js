@@ -136,5 +136,6 @@ smallCapCoC();
 mapper.Data.All.multiRegex([
 	[/the way clown toward/g, 'the way down toward'],
 	[/stung th disappointment/g, 'stung with disappointment'],
-	[/Persuad-g/g, 'Persuading']
+	[/Persuad-g/g, 'Persuading'],
+	[/l23°/g, '123°']
 ]);
