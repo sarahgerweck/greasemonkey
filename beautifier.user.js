@@ -7,16 +7,27 @@
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
 // ==/UserScript==
 
-var Beautifier = (function() {
+var RegexUtil = (function() {
 	var exports = {};
 
 	/** Basic replacement function */
 	var replacer = function(x, y) {
 		return x.replace(y[0], y[1]);
 	};
-	var applyRegexes = fjs.curry(function(re, s) {
+
+	/** Apply many regexes in sequence */
+	exports.multiRegex = fjs.curry(function(re, s) {
 		return fjs.fold(replacer, s, re);
 	});
+
+	return exports;
+})();
+
+var Beautifier = (function() {
+	var exports = {};
+
+	/* Import a helper function from regex utils. */
+	var applyRegexes = RegexUtil.multiRegex;
 
 	/** Helpers for generating small caps */
 	var smallCapStyle = 'font-varant: small-caps; font-variant-caps: all-small-caps;';
@@ -70,7 +81,12 @@ var TextMapper = function(xpath) {
 			return s.replace(re, repl);
 		};
 		exports.data(mapper);
-	}
+	};
+
+	exports.multiRE = function(regexes) {
+		var mapper = RegexUtil.multiRegex(regexes);
+		exports.data(mapper);
+	};
 
 	/** Remap the innerHTML of all matching nodes. */
 	exports.html = function(mapper) {
@@ -103,6 +119,8 @@ fullTextMapper.html(Beautifier.ampm);
 // Beautify a particular bit in Call of Cthulhu with small caps.
 smallCapCoC();
 
-mapper.dataRE(/the way clown toward/g, 'the way down toward');
-mapper.dataRE(/stung th disappointment/g, 'stung with disappointment');
-mapper.dataRE(/Persuad-g/g, 'Persuading');
+mapper.multiRE([
+	[/the way clown toward/g, 'the way down toward'],
+	[/stung th disappointment/g, 'stung with disappointment'],
+	[/Persuad-g/g, 'Persuading']
+]);
