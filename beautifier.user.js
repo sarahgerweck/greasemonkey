@@ -55,7 +55,7 @@ var Beautifier = (function() {
 		[/^" /g,                 ' ”'],
 		[/(\d)-(\d)/g,           '$1–$2'],
 		[/\s+-\s+|--| -- /g,     '—'],
-		[/\Q...\E/g,             '…']
+		[/\.\.\./g,              '…']
 	];
 	exports.apply = applyRegexes(regexes);
 
