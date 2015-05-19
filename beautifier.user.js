@@ -149,6 +149,7 @@ mapper.Text.All.multiRegex([
 
 if (window.location.href.indexOf('thedoomthatcametosarnath') > -1) {
 	mapper.Text.All.multiRegex([
-		[/\blb\b/g, 'Ib']
+		[/\blb\b/g, 'Ib'],
+		[/\bTh\b/g, 'Ib']
 	])
 };
