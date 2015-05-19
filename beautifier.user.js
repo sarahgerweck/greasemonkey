@@ -136,7 +136,8 @@ fullTextMapper.Html.All.generic(Beautifier.ampm);
 // General fixups for all HPL stories
 mapper.Text.All.multiRegex([
 	[/(\d+) degrees (\d+) minutes/g, '$1°$2′'],
-	[/(\d+) degrees/g, '$1°']
+	[/(\d+) degrees/g, '$1°'],
+	[/Y\. M\. C\. A\./g, 'YMCA']
 ]);
 
 // Story-specific fixups
@@ -174,6 +175,14 @@ if (page('thetemple.htm')) {
 	mapper.Text.All.multiRegex([
 		[/August20/g, 'August 20'],
 		[/with\.me/g, 'with me'],
-		[/scene. as if frightened/g, 'scene, as if frightened']
+		[/scene. as if frightened/g, 'scene, as if frightened'],
+    [/slow, to, in/g, 'slow, too, in'],
+		[/bad gone mad/g, 'had gone mad']
+	])
+}
+if (page('theshadowoverinnsmouth.htm')) {
+	mapper.Text.All.multiRegex([
+		[/in it its neighbors/g, 'in its neighbors'],
+		[/used to he a big/g, 'used to be a big']
 	])
 }
