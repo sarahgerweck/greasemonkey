@@ -160,4 +160,9 @@ if (page('index.html')) {
 	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
 		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
 	])
-};
+}
+if (page('thetemple.htm')) {
+	mapper.Text.All.multiRegex([
+		[/(\d+) degrees (\d+) minutes/g, '$1°$2′']
+	])
+}
