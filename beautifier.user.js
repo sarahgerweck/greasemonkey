@@ -125,7 +125,12 @@ var ContentMapper = function(xpath) {
 	return exports;
 };
 
+var HtmlMapper = function(basePath, substring) {
+	return ContentMapper(basePath + '//*[contains(text(), "' + substring.replace('"', '\\"') + '")]').Html
+}
+
 var storyArea = '/html/body/center/table/tbody';
+var storyHtml = fjs.curry(HtmlMapper)(storyArea);
 // Apply basic beautification to the page.
 var mapper = ContentMapper(storyArea + '//text()');
 mapper.Text.All.generic(Beautifier.apply);
@@ -145,12 +150,7 @@ mapper.Text.All.multiRegex([
 var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
 if (page('thecallofcthulhu.htm')) {
 	// Beautify a particular bit in Call of Cthulhu with small caps.
-	var smallCapCoC = function() {
-		var ccPath = storyArea + '//*[contains(text(), "headed \“CTHULHU CULT")]';
-		var newHtml = Beautifier.smallCapSpan('cthulhu cult')
-		ContentMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
-	};
-	smallCapCoC();
+	storyHtml('headed \“CTHULHU CULT').Unique.regex(/CTHULHU CULT/g, Beautifier.smallCapSpan('cthulhu cult'));
 
 	// Miscellaneous misspellings and errors.
 	mapper.Text.All.multiRegex([
@@ -185,5 +185,8 @@ if (page('theshadowoverinnsmouth.htm')) {
 	mapper.Text.All.multiRegex([
 		[/in it its neighbors/g, 'in its neighbors'],
 		[/used to he a big/g, 'used to be a big']
+	])
+	storyHtml('Arkham-Innsmouth-Newburyport').Unique.multiRegex([
+		[/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>']
 	])
 }
