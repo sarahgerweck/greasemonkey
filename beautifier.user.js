@@ -125,12 +125,13 @@ var ContentMapper = function(xpath) {
 	return exports;
 };
 
+var storyArea = '/html/body/center/table/tbody';
 // Apply basic beautification to the page.
-var mapper = ContentMapper('/html/body/center/table/tbody//text()');
+var mapper = ContentMapper(storyArea + '//text()');
 mapper.Text.All.generic(Beautifier.apply);
 
 // Apply small-caps AM & PM typesetting.
-var fullTextMapper = ContentMapper('/html/body/center/table/tbody');
+var fullTextMapper = ContentMapper(storyArea);
 fullTextMapper.Html.All.generic(Beautifier.ampm);
 
 // General fixups for all HPL stories
@@ -145,7 +146,7 @@ var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
 if (page('thecallofcthulhu.htm')) {
 	// Beautify a particular bit in Call of Cthulhu with small caps.
 	var smallCapCoC = function() {
-		var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
+		var ccPath = storyArea + '//*[contains(text(), "headed \“CTHULHU CULT")]';
 		var newHtml = Beautifier.smallCapSpan('cthulhu cult')
 		ContentMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
 	};
