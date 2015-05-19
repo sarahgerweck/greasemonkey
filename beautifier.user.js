@@ -130,25 +130,26 @@ mapper.Text.All.generic(Beautifier.apply);
 var fullTextMapper = ContentMapper('/html/body/center/table/tbody');
 fullTextMapper.Html.All.generic(Beautifier.ampm);
 
-// Beautify a particular bit in Call of Cthulhu with small caps.
-var smallCapCoC = function() {
-	var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
-	var newHtml = Beautifier.smallCapSpan('cthulhu cult')
-	ContentMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
-};
-smallCapCoC();
-
-// Miscellaneous misspellings and errors.
-mapper.Text.All.multiRegex([
-	[/the way clown toward/g, 'the way down toward'],
-	[/stung th disappointment/g, 'stung with disappointment'],
-	[/Persuad-g/g, 'Persuading'],
-	[/l23°/g, '123°'],
-	[/but johansen drove/g, 'but Johansen drove']
-]);
-
 var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
 
+if (page('thecallofcthulhu.htm')) {
+	// Beautify a particular bit in Call of Cthulhu with small caps.
+	var smallCapCoC = function() {
+		var ccPath = '/html/body/center/table/tbody//*[contains(text(), "headed \“CTHULHU CULT")]';
+		var newHtml = Beautifier.smallCapSpan('cthulhu cult')
+		ContentMapper(ccPath).Html.Unique.regex(/CTHULHU CULT/g, newHtml);
+	};
+	smallCapCoC();
+
+	// Miscellaneous misspellings and errors.
+	mapper.Text.All.multiRegex([
+		[/the way clown toward/g, 'the way down toward'],
+		[/stung th disappointment/g, 'stung with disappointment'],
+		[/Persuad-g/g, 'Persuading'],
+		[/l23°/g, '123°'],
+		[/but johansen drove/g, 'but Johansen drove']
+	]);
+}
 if (page('thedoomthatcametosarnath')) {
 	mapper.Text.All.multiRegex([
 		[/\blb\b/g, 'Ib'],
