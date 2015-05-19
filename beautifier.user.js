@@ -147,14 +147,15 @@ mapper.Text.All.multiRegex([
 	[/but johansen drove/g, 'but Johansen drove']
 ]);
 
-if (window.location.href.indexOf('thedoomthatcametosarnath') > -1) {
+var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
+
+if (page('thedoomthatcametosarnath')) {
 	mapper.Text.All.multiRegex([
 		[/\blb\b/g, 'Ib'],
 		[/\bTh\b/g, 'Ib']
 	])
-};
-
-if (window.location.href.indexOf('index.html') > -1) {
+}
+if (page('index.html')) {
 	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
 		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
 	])
