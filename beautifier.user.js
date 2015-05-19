@@ -176,7 +176,7 @@ if (page('thetemple.htm')) {
 		[/August20/g, 'August 20'],
 		[/with\.me/g, 'with me'],
 		[/scene. as if frightened/g, 'scene, as if frightened'],
-    [/slow, to, in/g, 'slow, too, in'],
+		[/slow, to, in/g, 'slow, too, in'],
 		[/bad gone mad/g, 'had gone mad']
 	])
 }
