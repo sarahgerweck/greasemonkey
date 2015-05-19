@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        LovecraftEmDashes
 // @namespace   http://gerweck.org/
-// @include     http://www.dagonbytes.com/thelibrary/lovecraft/*.htm
+// @include     http://www.dagonbytes.com/thelibrary/lovecraft/*.htm*
 // @version     1
 // @grant       none
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
@@ -151,5 +151,11 @@ if (window.location.href.indexOf('thedoomthatcametosarnath') > -1) {
 	mapper.Text.All.multiRegex([
 		[/\blb\b/g, 'Ib'],
 		[/\bTh\b/g, 'Ib']
+	])
+};
+
+if (window.location.href.indexOf('index.html') > -1) {
+	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
+		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
 	])
 };
