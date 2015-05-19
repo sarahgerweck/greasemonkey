@@ -130,8 +130,14 @@ mapper.Text.All.generic(Beautifier.apply);
 var fullTextMapper = ContentMapper('/html/body/center/table/tbody');
 fullTextMapper.Html.All.generic(Beautifier.ampm);
 
-var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
+// General fixups for all HPL stories
+mapper.Text.All.multiRegex([
+	[/(\d+) degrees (\d+) minutes/g, '$1°$2′'],
+	[/(\d+) degrees/g, '$1°']
+]);
 
+// Story-specific fixups
+var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
 if (page('thecallofcthulhu.htm')) {
 	// Beautify a particular bit in Call of Cthulhu with small caps.
 	var smallCapCoC = function() {
@@ -163,6 +169,6 @@ if (page('index.html')) {
 }
 if (page('thetemple.htm')) {
 	mapper.Text.All.multiRegex([
-		[/(\d+) degrees (\d+) minutes/g, '$1°$2′']
+		[/August20/g, 'August 20']
 	])
 }
