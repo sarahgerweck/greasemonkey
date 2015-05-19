@@ -169,6 +169,8 @@ if (page('index.html')) {
 }
 if (page('thetemple.htm')) {
 	mapper.Text.All.multiRegex([
-		[/August20/g, 'August 20']
+		[/August20/g, 'August 20'],
+		[/with\.me/g, 'with me'],
+		[/scene. as if frightened/g, 'scene, as if frightened']
 	])
 }
