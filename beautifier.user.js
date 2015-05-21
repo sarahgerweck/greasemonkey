@@ -148,6 +148,11 @@ mapper.Text.All.multiRegex([
 
 // Story-specific fixups
 var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
+if (page('index.html')) {
+	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
+		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
+	])
+}
 if (page('thecallofcthulhu.htm')) {
 	// Beautify a particular bit in Call of Cthulhu with small caps.
 	storyHtml('headed \“CTHULHU CULT').Unique.regex(/CTHULHU CULT/g, Beautifier.smallCapSpan('cthulhu cult'));
@@ -165,11 +170,6 @@ if (page('thedoomthatcametosarnath')) {
 	mapper.Text.All.multiRegex([
 		[/\blb\b/g, 'Ib'],
 		[/\bTh\b/g, 'Ib']
-	])
-}
-if (page('index.html')) {
-	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
-		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
 	])
 }
 if (page('thetemple.htm')) {
