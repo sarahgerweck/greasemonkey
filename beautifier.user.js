@@ -181,11 +181,26 @@ if (page('thetemple.htm')) {
 	])
 }
 if (page('theshadowoverinnsmouth.htm')) {
+	storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
+		/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
+	)
 	mapper.Text.All.multiRegex([
 		[/in it its neighbors/g, 'in its neighbors'],
-		[/used to he a big/g, 'used to be a big']
-	])
-	storyHtml('Arkham-Innsmouth-Newburyport').Unique.multiRegex([
-		[/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>']
+		[/used to he a big/g, 'used to be a big'],
+		[/became more and desolate/g, 'became more and more desolate'],
+		[/once white paint/g, 'once-white paint'],
+		[/ly-/g, 'ly '],
+		[/‘lart\b/g, '’lart'],
+		[/surface, That/g, 'surface. That'],
+		[/was?['’]n['’]t/g, 'wa’n’t'],
+		[/Wrath 0’/g, 'Wrath o’'],
+		[/—-./g, '——.'],
+		[/‘an\b/g, '’an'],
+		[/0’/g, 'O’'],
+		[/upharisn/g, 'upharsin'],
+		[/Order O’ Dagon/g, 'Order o’ Dagon'],
+		[/Masoic Hall/g, 'Masonic Hall'],
+		[/…—proclamation/g, '… proclamation'],
+		[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1']
 	])
 }
