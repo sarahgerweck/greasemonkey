@@ -168,8 +168,7 @@ if (page('thecallofcthulhu.htm')) {
 }
 if (page('thedoomthatcametosarnath')) {
 	mapper.Text.All.multiRegex([
-		[/\blb\b/g, 'Ib'],
-		[/\bTh\b/g, 'Ib']
+		[/\b(?:lb|Th)\b/g, 'Ib']
 	])
 }
 if (page('thetemple.htm')) {
