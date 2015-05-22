@@ -59,10 +59,16 @@ var Beautifier = (function() {
 	];
 	exports.apply = applyRegexes(regexes);
 
+	var smallAM = exports.smallCapSpan('am');
+	var smallPM = exports.smallCapSpan('pm');
 	/** Small-cap typesetting of am & pm */
 	var ampmRegexes = [
-		[/\bA\.?M\.(?!\w)/ig, exports.smallCapSpan('am')],
-		[/\bP\.?M\.(?!\w)/ig, exports.smallCapSpan('pm')]
+		[/\b[Aa]\.[Mm]\.(?=\s+[A-Z])/g, smallAM + '.'],
+		[/\b[Pp]\.[Mm]\.(?=\s+[A-Z])/g, smallPM + '.'],
+		[/\bA\.M\.(?!\w)/ig, smallAM],
+		[/\bP\.M\.(?!\w)/ig, smallPM],
+		[/\bA(\.?)M\1(?!\w)/g, smallAM],
+		[/\bP(\.?)M\1(?!\w)/g, smallPM]
 	];
 	exports.ampm = applyRegexes(ampmRegexes);
 
@@ -184,7 +190,6 @@ if (page('theshadowoverinnsmouth.htm')) {
 	storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
 		/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
 	);
-	fullTextMapper.Html.All.regex(/<\/span> Th/g, '</span>. Th');
 	mapper.Text.All.multiRegex([
 		[/in it its neighbors/g, 'in its neighbors'],
 		[/used to he a big/g, 'used to be a big'],
