@@ -183,7 +183,7 @@ if (page('thetemple.htm')) {
 if (page('theshadowoverinnsmouth.htm')) {
 	storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
 		/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
-	)
+	);
 	mapper.Text.All.multiRegex([
 		[/in it its neighbors/g, 'in its neighbors'],
 		[/used to he a big/g, 'used to be a big'],
