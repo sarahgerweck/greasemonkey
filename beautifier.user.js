@@ -184,6 +184,7 @@ if (page('theshadowoverinnsmouth.htm')) {
 	storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
 		/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
 	);
+	fullTextMapper.Html.All.regex(/<\/span> Th/g, '</span>. Th');
 	mapper.Text.All.multiRegex([
 		[/in it its neighbors/g, 'in its neighbors'],
 		[/used to he a big/g, 'used to be a big'],
@@ -201,6 +202,7 @@ if (page('theshadowoverinnsmouth.htm')) {
 		[/Order O’ Dagon/g, 'Order o’ Dagon'],
 		[/Masoic Hall/g, 'Masonic Hall'],
 		[/…—proclamation/g, '… proclamation'],
-		[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1']
+		[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1'],
+		[/could he turned/g, 'could be turned']
 	])
 }
