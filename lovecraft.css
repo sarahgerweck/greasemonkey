@@ -34,6 +34,8 @@ p, p font {
   font-stretch: semi-expanded;
   font-synthesis: weight;
   letter-spacing: normal;
+  hyphens: auto;
+  -moz-hyphens: auto;
 }
 p {
   width: 23em;
