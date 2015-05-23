@@ -208,6 +208,9 @@ if (page('theshadowoverinnsmouth.htm')) {
 		[/Masoic Hall/g, 'Masonic Hall'],
 		[/…—proclamation/g, '… proclamation'],
 		[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1'],
-		[/could he turned/g, 'could be turned']
+		[/could he turned/g, 'could be turned'],
+		[/Babeon/g, 'Babson'],
+		[/received a shook/g, 'received a shock'],
+		[/tied to hint/g, 'tried to hint']
 	])
 }
