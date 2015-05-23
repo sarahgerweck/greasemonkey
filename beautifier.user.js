@@ -135,8 +135,14 @@ var HtmlMapper = function(basePath, substring) {
 	return ContentMapper(basePath + '//*[contains(text(), "' + substring.replace('"', '\\"') + '")]').Html
 }
 
+
+// *****************************************
+// BEGINNING OF LOVECRAFT-SPECIFIC SCRIPTING
+// *****************************************
+
 var storyArea = '/html/body/center/table/tbody';
 var storyHtml = fjs.curry(HtmlMapper)(storyArea);
+
 // Apply basic beautification to the page.
 var mapper = ContentMapper(storyArea + '//text()');
 mapper.Text.All.generic(Beautifier.apply);
