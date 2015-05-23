@@ -11,6 +11,16 @@ html > body > center > div > table, html > body > center > div > div:last-of-typ
 html > body > center > h2:first-of-type, html > body > center > h3, html > body > center > h3 + p, html > body > center > h3 + p + p {
   display: none;
 }
+#stories {
+  width: 80%;
+  align: left;
+  list-style-type: none;
+  font-size: 24pt;
+  text-align: left;
+}
+.story {
+  padding: .2em;
+}
 h2 {
   border-bottom: 3px double #aaa; 
   padding-bottom: 10px;

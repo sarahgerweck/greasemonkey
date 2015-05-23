@@ -125,8 +125,10 @@ var ContentMapper = function(xpath) {
 		};
 	};
 
-	exports.Text = MetaMapper('mapper, n => n.data      = mapper(n.data)');
+	exports.foreach = forAllNodes;
+	exports.Text = MetaMapper('mapper, n => n.data = mapper(n.data)');
 	exports.Html = MetaMapper('mapper, n => n.innerHTML = mapper(n.innerHTML)');
+	exports.OuterHtml = MetaMapper('mapper, n => n.outerHTML = mapper(n.outerHTML)');
 
 	return exports;
 };
@@ -134,6 +136,8 @@ var ContentMapper = function(xpath) {
 var HtmlMapper = function(basePath, substring) {
 	return ContentMapper(basePath + '//*[contains(text(), "' + substring.replace('"', '\\"') + '")]').Html
 }
+
+var constFn = function(n) { return (function(x) { return n; }); }
 
 
 // *****************************************
@@ -158,9 +162,28 @@ mapper.Text.All.multiRegex([
 	[/Y\. M\. C\. A\./g, 'YMCA']
 ]);
 
+// Get rid of the stupid flash stuff at the top & bottom
+ContentMapper('//object').OuterHtml.All.generic(constFn(''));
+
 // Story-specific fixups
 var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
 if (page('index.html')) {
+	var mainTablePath = '/html/body/center/table[1]';
+	var storyElems = (function() {
+		var count = 0;
+		var storyElems = [];
+		var storyNodes = mainTablePath + "//p/b/i/font/a";
+		ContentMapper(storyNodes).foreach(function(n) {
+			count += 1;
+			var origHtml = n.outerHTML;
+			var liHtml = '<li class="story">' + origHtml + '</li>';
+			storyElems.push(liHtml);
+		});
+		return storyElems;
+	})();
+	ContentMapper(mainTablePath).OuterHtml.Unique.generic(function (n) {
+		return '<ul id="stories">' + storyElems.join('\n') + '</ul>';
+	})
 	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
 		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
 	])
