@@ -1,0 +1,44 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+
+@-moz-document url-prefix("http://www.hplovecraft.com/writings/texts/fiction/") {
+body, .pagelayout, table {
+  background: hsl(240, 20%, 0%) !important;
+  color: hsl(60, 10%, 70%) !important;
+  text-rendering: optimizeLegibility;
+}
+.pagelayout {
+  border-left: 0;
+  border-right: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+}
+.pagelayout > table {
+  font-family: "Minion Pro";
+  line-height: 140%;
+  font-size: 28pt !important;
+  padding: 0;
+}
+.pagelayout > table table, .pagelayout > table table table {
+  display: none;
+}
+td {
+  padding: 0;
+}
+.pagelayout > table, font, div {
+  font-family: "Minion Pro";
+  line-height: 140%;
+  font-size: 28pt !important;
+  font-weight: lighter;
+  font-stretch: semi-expanded;
+  font-synthesis: weight;
+  letter-spacing: normal;
+  hyphens: auto;
+  -moz-hyphens: auto;
+  margin: 0 auto;
+  margin-bottom: 32px;
+  width: 23em;
+  text-align: left;
+}
+}
+
