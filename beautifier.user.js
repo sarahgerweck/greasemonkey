@@ -2,6 +2,7 @@
 // @name        LovecraftEmDashes
 // @namespace   http://gerweck.org/
 // @include     http://www.dagonbytes.com/thelibrary/lovecraft/*.htm*
+// @include     http://www.hplovecraft.com/writings/texts/fiction/*.aspx
 // @version     1
 // @grant       none
 // @require     https://raw.githubusercontent.com/leecrossley/functional-js/master/functional.min.js
@@ -144,7 +145,19 @@ var constFn = function(n) { return (function(x) { return n; }); }
 // BEGINNING OF LOVECRAFT-SPECIFIC SCRIPTING
 // *****************************************
 
-var storyArea = '/html/body/center/table/tbody';
+var DAGON = "DAGON"
+var HPLCOM = "HPLCOM"
+
+var collection = (function() {
+	return window.location.href.indexOf('hplovecraft.com') > -1 ? HPLCOM : DAGON;
+})();
+
+var storyAreas = {
+	DAGON: '/html/body/center/table/tbody',
+	HPLCOM: '/html/body/font/center/div/table/tbody/tr[3]/td/div'
+};
+var storyArea = storyAreas[collection];
+
 var storyHtml = fjs.curry(HtmlMapper)(storyArea);
 
 // Apply basic beautification to the page.
@@ -162,84 +175,97 @@ mapper.Text.All.multiRegex([
 	[/Y\. M\. C\. A\./g, 'YMCA']
 ]);
 
-// Get rid of the stupid flash stuff at the top & bottom
-ContentMapper('//object').OuterHtml.All.generic(constFn(''));
+if (collection === HPLCOM) {
+	ContentMapper("//br").OuterHtml.All.generic(constFn('<p/>'));
+	ContentMapper('//img').OuterHtml.All.generic(constFn(''));
+}
 
-// Story-specific fixups
-var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
-if (page('index.html')) {
-	var mainTablePath = '/html/body/center/table[1]';
-	var storyElems = (function() {
-		var count = 0;
-		var storyElems = [];
-		var storyNodes = mainTablePath + "//p/b/i/font/a";
-		ContentMapper(storyNodes).foreach(function(n) {
-			count += 1;
-			var origHtml = n.outerHTML;
-			var liHtml = '<li class="story">' + origHtml + '</li>';
-			storyElems.push(liHtml);
-		});
-		return storyElems;
-	})();
-	ContentMapper(mainTablePath).OuterHtml.Unique.generic(function (n) {
-		return '<ul id="stories">' + storyElems.join('\n') + '</ul>';
-	})
-	ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
-		[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
-	])
-}
-if (page('thecallofcthulhu.htm')) {
-	// Beautify a particular bit in Call of Cthulhu with small caps.
-	storyHtml('headed \“CTHULHU CULT').Unique.regex(/CTHULHU CULT/g, Beautifier.smallCapSpan('cthulhu cult'));
+if (collection == DAGON) {
+	// Get rid of the stupid flash stuff at the top & bottom
+	ContentMapper('//object').OuterHtml.All.generic(constFn(''));
 
-	// Miscellaneous misspellings and errors.
-	mapper.Text.All.multiRegex([
-		[/the way clown toward/g, 'the way down toward'],
-		[/stung th disappointment/g, 'stung with disappointment'],
-		[/Persuad-g/g, 'Persuading'],
-		[/l23°/g, '123°'],
-		[/but johansen drove/g, 'but Johansen drove']
-	]);
-}
-if (page('thedoomthatcametosarnath')) {
-	mapper.Text.All.multiRegex([
-		[/\b(?:lb|Th)\b/g, 'Ib']
-	])
-}
-if (page('thetemple.htm')) {
-	mapper.Text.All.multiRegex([
-		[/August20/g, 'August 20'],
-		[/with\.me/g, 'with me'],
-		[/scene. as if frightened/g, 'scene, as if frightened'],
-		[/slow, to, in/g, 'slow, too, in'],
-		[/bad gone mad/g, 'had gone mad']
-	])
-}
-if (page('theshadowoverinnsmouth.htm')) {
-	storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
-		/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
-	);
-	mapper.Text.All.multiRegex([
-		[/in it its neighbors/g, 'in its neighbors'],
-		[/used to he a big/g, 'used to be a big'],
-		[/became more and desolate/g, 'became more and more desolate'],
-		[/once white paint/g, 'once-white paint'],
-		[/ly-/g, 'ly '],
-		[/‘lart\b/g, '’lart'],
-		[/surface, That/g, 'surface. That'],
-		[/was?['’]n['’]t/g, 'wa’n’t'],
-		[/Wrath 0’/g, 'Wrath o’'],
-		[/—-./g, '——.'],
-		[/‘an\b/g, '’an'],
-		[/0’/g, 'O’'],
-		[/upharisn/g, 'upharsin'],
-		[/Order O’ Dagon/g, 'Order o’ Dagon'],
-		[/Masoic Hall/g, 'Masonic Hall'],
-		[/…—proclamation/g, '… proclamation'],
-		[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1'],
-		[/could he turned/g, 'could be turned'],
-		[/Babeon/g, 'Babson'],
-		[/received a shook/g, 'received a shock'],
-		[/tied to hint/g, 'tried to hint']
-	])
+	// Story-specific fixups
+	var page = function(uf) { return window.location.href.indexOf(uf) > -1; }
+	if (page('index.html')) {
+		var mainTablePath = '/html/body/center/table[1]';
+		var storyElems = (function() {
+			var count = 0;
+			var storyElems = [];
+			var storyNodes = mainTablePath + "//p/b/i/font/a";
+			ContentMapper(storyNodes).foreach(function(n) {
+				count += 1;
+				var origHtml = n.outerHTML;
+				var liHtml = '<li class="story">' + origHtml + '</li>';
+				storyElems.push(liHtml);
+			});
+			return storyElems;
+		})();
+		ContentMapper(mainTablePath).OuterHtml.Unique.generic(function (n) {
+			return '<ul id="stories">' + storyElems.join('\n') + '</ul>';
+		})
+		ContentMapper('/html/body/center/p/font//text()').Text.All.multiRegex([
+			[/Dagon's H.P.Lovecraft/g, 'Dagon’s H.P. Lovecraft']
+		])
+	}
+	if (page('thecallofcthulhu.htm')) {
+		// Beautify a particular bit in Call of Cthulhu with small caps.
+		storyHtml('headed \“CTHULHU CULT').Unique.regex(/CTHULHU CULT/g, Beautifier.smallCapSpan('cthulhu cult'));
+
+		// Miscellaneous misspellings and errors.
+		mapper.Text.All.multiRegex([
+			[/the way clown toward/g, 'the way down toward'],
+			[/stung th disappointment/g, 'stung with disappointment'],
+			[/Persuad-g/g, 'Persuading'],
+			[/l23°/g, '123°'],
+			[/but johansen drove/g, 'but Johansen drove']
+		]);
+	}
+	if (page('thedoomthatcametosarnath')) {
+		mapper.Text.All.multiRegex([
+			[/\b(?:lb|Th)\b/g, 'Ib']
+		])
+	}
+	if (page('thetemple.htm')) {
+		mapper.Text.All.multiRegex([
+			[/August20/g, 'August 20'],
+			[/with\.me/g, 'with me'],
+			[/scene. as if frightened/g, 'scene, as if frightened'],
+			[/slow, to, in/g, 'slow, too, in'],
+			[/bad gone mad/g, 'had gone mad']
+		])
+	}
+	if (page('theshadowoverinnsmouth.htm')) {
+		storyHtml('Arkham-Innsmouth-Newburyport').Unique.regex(
+			/Arkham-Innsmouth-Newburyport/g, '<i>Arkham–Innsmouth–Newburyport</i>'
+		);
+		mapper.Text.All.multiRegex([
+			[/in it its neighbors/g, 'in its neighbors'],
+			[/used to he a big/g, 'used to be a big'],
+			[/became more and desolate/g, 'became more and more desolate'],
+			[/once white paint/g, 'once-white paint'],
+			[/ly-/g, 'ly '],
+			[/‘lart\b/g, '’lart'],
+			[/surface, That/g, 'surface. That'],
+			[/was?['’]n['’]t/g, 'wa’n’t'],
+			[/Wrath 0’/g, 'Wrath o’'],
+			[/—-./g, '——.'],
+			[/‘an\b/g, '’an'],
+			[/0’/g, 'O’'],
+			[/upharisn/g, 'upharsin'],
+			[/Order O’ Dagon/g, 'Order o’ Dagon'],
+			[/Masoic Hall/g, 'Masonic Hall'],
+			[/…—proclamation/g, '… proclamation'],
+			[/‘((?:twen|thir|for|fif|six|seven|eigh|nine)ty)/g, '’$1'],
+			[/could he turned/g, 'could be turned'],
+			[/Babeon/g, 'Babson'],
+			[/received a shook/g, 'received a shock'],
+			[/tied to hint/g, 'tried to hint']
+		])
+	}
+	if (page('thehound.htm')) {
+		mapper.Text.All.multiRegex([
+			[/eldrith phantasy/g, 'eldritch phantasy'],
+			[/ -”/g, '—”']
+		])
+	}
 }
